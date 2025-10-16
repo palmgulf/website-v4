@@ -10,7 +10,8 @@ import ProductCollectionGrid from '../components/ProductCollectionGrid';
 import ProductCardGrid from '../components/ProductCardGrid';
 import Quote from '../components/Quote';
 import Title from '../components/Title';
-
+import ProductGrid from '../components/ProductGrid';
+import ServiceBookingForm from '../components/ServiceBookingForm';
 import { generateMockBlogData, generateMockProductData } from '../helpers/mock';
 
 import * as styles from './index.module.css';
@@ -68,6 +69,16 @@ const IndexPage = () => {
             columns={3}
             data={newArrivals}
           />
+        </Container>
+      </div>
+
+      {/* Product Grid and Booking Form */}
+      <div className={styles.newArrivalsContainer}>
+        <Container>
+          <Title name={'Our Products'} />
+          <ProductGrid />
+          <Title name={'Book a Service'} />
+          <ServiceBookingForm />
         </Container>
       </div>
 
