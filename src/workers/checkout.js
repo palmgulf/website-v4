@@ -13,10 +13,8 @@ export default {
       return new Response(null, { status: 204, headers });
     }
 
-    const url = new URL(request.url);
-    
-    // Handle POST requests to /api/checkout
-    if (request.method === 'POST' && url.pathname === '/api/checkout') {
+    // Handle POST requests at root (/) for Service Binding
+    if (request.method === 'POST') {
       try {
         const stripe = new Stripe(env.STRIPE_SECRET_KEY);
         const data = await request.json();
@@ -41,6 +39,6 @@ export default {
       }
     }
 
-    return new Response('Not found', { status: 404, headers });
+    return new Response('Method Not Allowed', { status: 405, headers });
   }
 }
