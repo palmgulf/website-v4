@@ -9,28 +9,14 @@ const StripeCheckout = ({ lineItems }) => {
     
     try {
       // Use GATSBY_API_URL if set, otherwise detect environment based on port
-      let apiUrl;
-      if (process.env.GATSBY_API_URL) {
-        apiUrl = process.env.GATSBY_API_URL;
-      } else {
-        // Check if running in Gatsby serve (port 9000)
-        const isGatsbyServe = typeof window !== 'undefined' && window.location.port === '9000';
-        apiUrl = isGatsbyServe
+      const apiUrl = process.env.GATSBY_API_URL ||
+        (typeof window !== 'undefined' && (window.location.port === '9000' || window.location.port === '5000')
           ? 'http://localhost:3000/api/checkout'
-          : 'https://checkout.your-account.workers.dev/api/checkout';
-      }
+          : 'https://checkout.rough-haze-95d9.workers.dev');
       
-      // Determine success and cancel URLs based on environment
-      const isLocal = typeof window !== 'undefined' &&
-        (window.location.port === '5000' || window.location.port === '9000');
-      
-      const successUrl = isLocal
-        ? `http://localhost:${window.location.port}/success`
-        : 'https://your-project.pages.dev/success';
-      
-      const cancelUrl = isLocal
-        ? `http://localhost:${window.location.port}/cancel`
-        : 'https://your-project.pages.dev/cancel';
+      // Use production URLs for success and cancel
+      const successUrl = 'https://website-v4-11x.pages.dev/success';
+      const cancelUrl = 'https://website-v4-11x.pages.dev/cancel';
       
       console.log('Sending checkout request to:', apiUrl);
       console.log('Request body:', JSON.stringify({

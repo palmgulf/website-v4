@@ -19,21 +19,17 @@ GATSBY_API_URL=http://localhost:3000/api/checkout
 - For Worker: Add `STRIPE_SECRET_KEY` in Workers > checkout > Settings > Variables
 - For Pages: Add `NODE_ENV=production` in Pages > project > Settings > Environment variables
 
-### 2. Update Production URLs
-In `src/components/StripeCheckout.js`:
+### 2. Update URLs in StripeCheckout.js
 ```javascript
+// Use GATSBY_API_URL if set, otherwise detect environment based on port
 const apiUrl = process.env.GATSBY_API_URL || 
-  (process.env.NODE_ENV === 'production' 
-    ? 'https://checkout.your-account.workers.dev/api/checkout'
-    : 'http://localhost:3000/api/checkout');
+  (typeof window !== 'undefined' && (window.location.port === '9000' || window.location.port === '5000') 
+    ? 'http://localhost:3000/api/checkout' 
+    : 'https://checkout.your-account.workers.dev/api/checkout');
 
-const successUrl = process.env.NODE_ENV === 'production'
-  ? 'https://your-project.pages.dev/success'
-  : 'http://localhost:5000/success';
-
-const cancelUrl = process.env.NODE_ENV === 'production'
-  ? 'https://your-project.pages.dev/cancel'
-  : 'http://localhost:5000/cancel';
+// Use production URLs for success and cancel
+const successUrl = 'https://website-v4-11x.pages.dev/success';
+const cancelUrl = 'https://website-v4-11x.pages.dev/cancel';
 ```
 
 ### 3. Local Testing
@@ -84,3 +80,6 @@ wrangler deploy src/workers/checkout.js --name checkout
   - Ensure `GATSBY_API_URL` is set to `http://localhost:3000/api/checkout`
   - Verify both servers (Gatsby and checkout) are running
   - Check browser console for detailed error messages
+- For production CORS issues:
+  - Ensure Worker URL matches the one in StripeCheckout.js
+  - Verify Cloudflare Worker CORS headers are set correctly
