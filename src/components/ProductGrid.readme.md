@@ -1,22 +1,17 @@
-# ProductGrid Component Updates
+# ProductGrid Component
 
-The ProductGrid component has been updated to include:
+This component displays products and manages cart state for checkout.
 
-1. "Add to Cart" buttons for each product
-2. Cart state management using React's useState hook
-3. Integration with the StripeCheckout component
-
-## New Features
-
-- Each product card now has an "Add to Cart" button
-- Added cart state that stores Stripe price IDs and quantities
-- The StripeCheckout component is displayed when cart has items
-- Products now require a `priceId` property for Stripe integration
+## Updates
+- Added cart logging on checkout initiation
+- Enhanced cart state management
 
 ## Usage
+```jsx
+<ProductGrid />
+```
 
-The component automatically uses product data from `product.json` if available, or falls back to mock data.
-
-## Styling
-- Uses `grid`, `card`, and `button` classes from `ProductGrid.module.css`
-- Added `checkoutContainer` class for the checkout button container
+## Features
+- Add products to cart
+- Display cart summary
+- Integrated with StripeCheckout component

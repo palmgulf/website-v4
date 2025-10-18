@@ -1,13 +1,13 @@
 import React from 'react';
-import * as styles from '../components/ProductGrid.module.css';
+import Layout from '../components/LayoutOption';
 
-const CancelPage = () => {
-  return (
-    <div className={styles.container}>
+const CancelPage = () => (
+  <Layout>
+    <div className="container">
       <h1>Payment Canceled</h1>
-      <p>Your payment was not completed.</p>
+      <p>Your payment was canceled. You can return to the cart to try again.</p>
     </div>
-  );
-};
+  </Layout>
+);
 
 export default CancelPage;

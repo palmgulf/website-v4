@@ -1,13 +1,13 @@
 import React from 'react';
-import * as styles from '../components/ProductGrid.module.css';
+import Layout from '../components/LayoutOption';
 
-const SuccessPage = () => {
-  return (
-    <div className={styles.container}>
+const SuccessPage = () => (
+  <Layout>
+    <div className="container">
       <h1>Payment Successful!</h1>
       <p>Thank you for your purchase.</p>
     </div>
-  );
-};
+  </Layout>
+);
 
 export default SuccessPage;

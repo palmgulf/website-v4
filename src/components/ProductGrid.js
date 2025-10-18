@@ -1,61 +1,41 @@
 import React, { useState } from 'react';
 import * as styles from './ProductGrid.module.css';
-import productData from '../helpers/product.json';
+import ProductCard from './ProductCardGrid';
 import StripeCheckout from './StripeCheckout';
 
-// Default price IDs for products (using user's test price ID)
-const defaultPriceIds = [
-  'price_1SIkg8G4u1aY04NBWhUrT8ox',
-  'price_1SIkg8G4u1aY04NBWhUrT8ox',
-  'price_1SIkg8G4u1aY04NBWhUrT8ox',
-  'price_1SIkg8G4u1aY04NBWhUrT8ox'
-];
-
 const ProductGrid = () => {
-  // Add priceIds to products if missing
-  const products = productData.length > 0 ?
-    productData.slice(0, 4).map((product, index) => ({
-      ...product,
-      priceId: product.priceId || defaultPriceIds[index] || `price_${index + 1}`
-    })) :
-    [
-      {name: "Shirt", price: 29.99, image: "/images/shirt.jpg", priceId: 'price_12345'},
-      {name: "Jacket", price: 59.99, image: "/images/jacket.jpg", priceId: 'price_23456'},
-      {name: "Hat", price: 19.99, image: "/images/hat.jpg", priceId: 'price_34567'},
-      {name: "Shoes", price: 79.99, image: "/images/shoes.jpg", priceId: 'price_45678'}
-    ];
+  const [cart, setCart] = useState([]);
 
-  // Ensure all products have valid price IDs
-  products.forEach(product => {
-    if (!product.priceId || typeof product.priceId !== 'string' || !product.priceId.startsWith('price_')) {
-      console.warn(`Invalid priceId for product: ${product.name}`, product);
-      product.priceId = 'price_default';
-    }
-  });
-
-  const [cartItems, setCartItems] = useState([]);
+  const products = [
+    { id: '1', name: 'Shirt', priceId: 'price_1SIuTXG4u1aY04NBtdmgaNGa' },
+    { id: '2', name: 'Jacket', priceId: 'price_1SIuTwG4u1aY04NBrDQmKnoa' },
+    { id: '3', name: 'Hat', priceId: 'price_1SIuUOG4u1aY04NB0fs4CNbO' },
+    { id: '4', name: 'Shoes', priceId: 'price_1SIuUgG4u1aY04NBH7HSq9Lj' },
+  ];
 
   const addToCart = (product) => {
-    setCartItems([...cartItems, {
-      price: product.priceId,
-      quantity: 1
-    }]);
+    setCart(prevCart => {
+      const existingItem = prevCart.find(item => item.price === product.priceId);
+      if (existingItem) {
+        return prevCart.map(item =>
+          item.price === product.priceId
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      } else {
+        return [...prevCart, { price: product.priceId, quantity: 1 }];
+      }
+    });
   };
 
   return (
     <div>
       <div className={styles.grid}>
-        {products.map((product, index) => (
-          <div key={index} className={styles.card}>
-            <img 
-              src={product.image} 
-              alt={product.name} 
-              style={{ width: '100%', height: 'auto' }} 
-            />
-            <h3>{product.name}</h3>
-            <p>${product.price.toFixed(2)}</p>
-            <button 
-              className={styles.button} 
+        {products.map(product => (
+          <div key={product.id} className={styles.card}>
+            <ProductCard product={product} />
+            <button
+              className={styles.button}
               onClick={() => addToCart(product)}
             >
               Add to Cart
@@ -63,11 +43,21 @@ const ProductGrid = () => {
           </div>
         ))}
       </div>
-      {cartItems.length > 0 && (
-        <div className={styles.checkoutContainer}>
-          <StripeCheckout lineItems={cartItems} />
-        </div>
-      )}
+      
+      <div className={styles.cartSummary}>
+        <h3>Cart ({cart.reduce((total, item) => total + item.quantity, 0)} items)</h3>
+        <StripeCheckout
+          lineItems={cart}
+          onCheckoutStart={() => {
+            const lineItems = cart.map(item => ({
+              price: item.price,
+              quantity: item.quantity
+            }));
+            console.log('Sending lineItems to checkout:', lineItems);
+            console.log('Checkout started with cart items:', cart);
+          }}
+        />
+      </div>
     </div>
   );
 };

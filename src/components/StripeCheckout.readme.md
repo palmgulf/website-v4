@@ -1,30 +1,28 @@
 # StripeCheckout Component
 
-This component provides a button that redirects to a Stripe Payment Link.
+This component handles the Stripe checkout process.
 
-## Implementation Notes
-
-This component uses Stripe Payment Links, which is the recommended approach for simple integrations. It does not require enabling client-only integration in your Stripe dashboard.
-
-## Props
-
-- `lineItems`: An array of objects representing the items to purchase. Each object should have:
-   - `price`: The Stripe price ID (string)
-   - `quantity`: The quantity (number)
+## Updates
+- Added CORS support for local development
+- Enhanced error handling with detailed logging
+- Added user-facing alerts for checkout failures
+- Uses local server in development and Cloudflare worker in production
 
 ## Usage
-
 ```jsx
-<StripeCheckout lineItems={[{ price: 'price_12345', quantity: 1 }]} />
+<StripeCheckout lineItems={cartItems} />
 ```
 
-## How It Works
+## Development Setup
+When testing locally:
+1. Run the local checkout worker: `node src/workers/local-checkout.js`
+2. Run Gatsby on port 5000: `gatsby develop -p 5000`
+3. The component will automatically use `http://localhost:3000/api/checkout`
 
-When clicked, the button:
-1. Validates the line items
-2. Constructs a Stripe Payment Link URL
-3. Redirects the user to the payment page
+## Dependencies
+- `@stripe/stripe-js`
 
-## Styling
-
-Uses the `button` class from `ProductGrid.module.css`.
+## Troubleshooting
+- Ensure the local checkout worker is running
+- Verify CORS headers match the Gatsby port (5000)
+- Check browser console for detailed error messages
