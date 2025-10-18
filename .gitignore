@@ -8,3 +8,6 @@ public
 
 # Environment variables
 .env
+
+# Explicitly include functions directory for Pages Function deployment
+# /functions
