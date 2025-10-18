@@ -12,18 +12,13 @@ const StripeCheckout = ({ lineItems }) => {
       const apiUrl = process.env.GATSBY_API_URL ||
         (typeof window !== 'undefined' && (window.location.port === '9000' || window.location.port === '5000')
           ? 'http://localhost:3000/api/checkout'
-          : 'https://checkout.rough-haze-95d9.workers.dev');
+          : '/api/checkout');
       
-      // Use production URLs for success and cancel
+      // Fixed URLs for Cloudflare Pages
       const successUrl = 'https://website-v4-11x.pages.dev/success';
       const cancelUrl = 'https://website-v4-11x.pages.dev/cancel';
       
       console.log('Sending checkout request to:', apiUrl);
-      console.log('Request body:', JSON.stringify({
-        lineItems,
-        successUrl,
-        cancelUrl
-      }));
         
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -32,11 +27,7 @@ const StripeCheckout = ({ lineItems }) => {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        body: JSON.stringify({
-          lineItems,
-          successUrl,
-          cancelUrl
-        }),
+        body: JSON.stringify({ lineItems }),
       });
       
       if (!response.ok) {
